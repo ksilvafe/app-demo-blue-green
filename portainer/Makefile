@@ -1,8 +1,9 @@
-server = ec2-user@devpira.brorlandi.xyz
+server = ubuntu@app-demo.duckdns.org
+key = ~/.ssh/app-demo.pem
 project_path = $(shell basename $(shell pwd))
 
 rsync:
-	rsync -azv . $(server):$(project_path)
+	rsync -azv -e "ssh -i $(key)" ./ $(server):~/$(project_path)
 
 deploy: rsync
-	ssh $(server) "cd $(project_path) && docker compose down && docker compose up -d"
+	ssh -i $(key) $(server) "cd ~/$(project_path) && docker compose down && docker compose up -d"
