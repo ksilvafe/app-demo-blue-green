@@ -9,8 +9,9 @@ services:
       - '--providers.file.filename=/etc/traefik/traefik_dynamic.yml'
       - '--entrypoints.web.address=:80'
       - '--entrypoints.websecure.address=:443'
-      - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
-      - '--certificatesresolvers.myresolver.acme.email=seu.email@exemplo.com' # Substitua pelo seu email
+      - '--certificatesresolvers.myresolver.acme.httpchallenge=true'
+      - '--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web'
+      - '--certificatesresolvers.myresolver.acme.email=ferreirakevin325@gmail.com' # Substitua pelo seu email
       - '--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json'
     ports:
       - '80:80'
@@ -22,7 +23,7 @@ services:
     networks:
       - traefik
     labels:
-      - 'traefik.http.routers.traefik-dashboard.rule=Host(`traefik.devpira.brorlandi.xyz`)' # dominio que foi configurado no duck dns
+      - 'traefik.http.routers.traefik-dashboard.rule=Host(`traefik.app-demo.duckdns.org`)' # dominio que foi configurado no duck dns
       - 'traefik.http.routers.traefik-dashboard.service=api@internal'
       - 'traefik.http.routers.traefik-dashboard.entrypoints=websecure'
       - 'traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver'

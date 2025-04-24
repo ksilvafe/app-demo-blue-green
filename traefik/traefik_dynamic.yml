@@ -1,4 +1,4 @@
-htpp:
+http:
   middlewares:
     https-only:
       redirectScheme:

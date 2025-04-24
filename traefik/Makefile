@@ -1,16 +1,18 @@
-server = ec2-user@devpira.brorlandi.xyz # servidor onde vai ser conectado.
-project_path = $(shell basename $(shell pwd)) # mostra pasta dentro do servidor onde vai ser criado.
+server = ubuntu@app-demo.duckdns.org
+key = ~/.ssh/app-demo.pem
+project_path = $(shell basename $(shell pwd))
 
 rsync:
-	rsync -azv . $(server):$(project_path)
+	rsync -azv -e "ssh -i $(key)" ./ $(server):~/$(project_path)
 
-# First run for setup docker compose and traefik
 setup: rsync
-	ssh $(server) "cd ~/$(project_path) &&\
-		touch acme.json &&\
-		chmod 600 acme.json &&\
-	 	docker network create traefik &&\
+	ssh -i $(key) $(server) "cd ~/$(project_path) && \
+		touch acme.json && \
+		chmod 600 acme.json && \
+		docker network create traefik || true && \
 		docker compose up -d"
 
 deploy: rsync
-	ssh $(server) "cd $(project_path) && docker compose down && docker compose up -d"
+	ssh -i $(key) $(server) "cd ~/$(project_path) && \
+		docker compose down && \
+		docker compose up -d"
